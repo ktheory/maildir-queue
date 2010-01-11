@@ -10,7 +10,11 @@ begin
     gem.email = "aaron@ktheory.com"
     gem.homepage = "http://github.com/ktheory/maildir-queue"
     gem.authors = ["Aaron Suggs"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
+    gem.add_development_dependency "shoulda", ">= 0"
+    gem.add_development_dependency "rack-test", ">= 0"
+    gem.add_dependency "maildir", ">= 0.3.0"
+    gem.add_dependency "sinatra", ">= 0.0.0"
+    gem.add_dependency "json", ">= 0.0.0"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
