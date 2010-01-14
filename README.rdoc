@@ -14,4 +14,4 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2009 Aaron Suggs. See LICENSE for details.
+Copyright (c) 2010 Aaron Suggs. See LICENSE for details.
