@@ -6,12 +6,12 @@ class Maildir::WebQueue < Sinatra::Base
 
   KEY_VALIDATOR = /^cur\/\d{10}\.\w+(\.\w+)+:2,(\w+)?$/
 
-  class << self
-    attr_accessor :queue
+  def self.path=(path)
+    @@queue = Maildir::Queue.new(path)
   end
 
   def queue
-    self.class.queue
+    @@queue
   end
 
   # Test that key is well-formed. If not, return 403 Forbidden error.

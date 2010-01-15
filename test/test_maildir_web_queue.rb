@@ -3,7 +3,7 @@ class TestMaildirWebQueue < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    Maildir::WebQueue.queue = temp_queue
+    Maildir::WebQueue.path = temp_queue.path
     Maildir::WebQueue
   end
 
