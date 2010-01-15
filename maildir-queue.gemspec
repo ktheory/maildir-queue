@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
      "examples/config.ru",
      "lib/maildir/queue.rb",
      "lib/maildir/web_queue.rb",
+     "maildir-queue.gemspec",
      "test/helper.rb",
      "test/test_maildir_queue.rb",
      "test/test_maildir_web_queue.rb"
