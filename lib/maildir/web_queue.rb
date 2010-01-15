@@ -34,7 +34,7 @@ class Maildir::WebQueue < Sinatra::Base
     {"new" => queue.list(:new).size,"cur" => queue.list(:cur).size}.to_json
   end
 
-  # Create a new job. Requires params[:job]
+  # Create a new message. Requires params[:data]
   # Returns the message's key as json
   post "/message" do
     halt 400, "Must specify data parameter" unless params[:data]
@@ -50,11 +50,11 @@ class Maildir::WebQueue < Sinatra::Base
     if message
       {"key" => message.key, "data" => message.data}.to_json
     else
-      not_found "No pending jobs".to_json
+      not_found "No pending messages".to_json
     end
   end
 
-  # Delete a job from the queue
+  # Delete a message from the queue
   delete "/message/*" do |key|
     sanitize(key)
     queue.delete(key)
