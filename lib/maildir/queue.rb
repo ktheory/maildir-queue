@@ -1,7 +1,8 @@
 require 'maildir'
 class Maildir::Queue < Maildir
-  # How many times to retry getting a key
-  LISTING_RETRIES = 3
+  # How many times to retry getting a key.
+  # Default is -1 (infinite retries)
+  SHIFT_RETRIES = -1
 
   # Adds a new message to the queue. Returns a Maildir::Message object
   def push(data)
@@ -26,8 +27,8 @@ class Maildir::Queue < Maildir
       end
     rescue Errno::ENOENT
       # Either message.process failed. Retry.
-      if retry_count < LISTING_RETRIES
-        retry_count += 1
+      if SHIFT_RETRIES < 0 || retries < SHIFT_RETRIES
+        retries += 1
         retry
       else
         # After several failures, act as if there are no pending messages
