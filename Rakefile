@@ -5,13 +5,14 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "maildir-queue"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{A simple queue API with a maildir backend.}
+    gem.description = %Q{A simple queue API with a maildir backend. Also includes an HTTP API}
     gem.email = "aaron@ktheory.com"
     gem.homepage = "http://github.com/ktheory/maildir-queue"
     gem.authors = ["Aaron Suggs"]
     gem.add_development_dependency "shoulda", ">= 0"
     gem.add_development_dependency "rack-test", ">= 0"
+    gem.add_development_dependency "ktheory-fakefs", ">= 0"
     gem.add_dependency "maildir", ">= 0.3.0"
     gem.add_dependency "sinatra", ">= 0.0.0"
     gem.add_dependency "json", ">= 0.0.0"
