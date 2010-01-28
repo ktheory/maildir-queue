@@ -4,7 +4,7 @@ require "json"
 
 class Maildir::WebQueue < Sinatra::Base
 
-  KEY_VALIDATOR = /^cur\/\d{10}\.\w+(\.\w+)+:2,(\w+)?$/
+  KEY_VALIDATOR = /^(new|cur)\/\d{10}\.\w+(\.\w+)+:2,(\w+)?$/
 
   def self.path=(path)
     @@queue = Maildir::Queue.new(path)
