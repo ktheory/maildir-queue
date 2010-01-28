@@ -50,7 +50,7 @@ class Maildir::WebQueue < Sinatra::Base
     if message
       {"key" => message.key, "data" => message.data}.to_json
     else
-      not_found "No pending messages".to_json
+      not_found "No new messages".to_json
     end
   end
 
