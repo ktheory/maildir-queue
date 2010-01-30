@@ -57,9 +57,33 @@ class TestMaildirWebQueue < Test::Unit::TestCase
       assert_equal @data, JSON.parse(last_response.body)["data"]
     end
 
+    should "return 404 when touching a missing message" do
+      key = "cur/1234567890.M975543P58179Q11.host:2,"
+      post "/touch/#{key}"
+      assert_equal 404, last_response.status
+    end
+
+    should "touch a message" do
+      message = temp_queue.add(@data)
+      message.process
+
+      post "/touch/#{message.key}"
+      assert_equal 204, last_response.status
+    end
+
+    should "update a message's mtime when touched" do
+      message = temp_queue.add(@data)
+      message.process
+
+      # Set mtime to 30 minutes ago
+      message.utime(Time.now, Time.now - 30*60)
+
+      post "/touch/#{message.key}"
+      assert_in_delta Time.now, message.mtime, 1
+    end
   end
 
-  # Test the Maildir::WebQueue::KEY_VALIDATOR
+  # Test Maildir::WebQueue::KEY_VALIDATORS
   bad_keys = [
     "/etc/passwd", "cur/../../etc/password", "..",
     "cur/123456789.M975543P58179Q11.host:2,",

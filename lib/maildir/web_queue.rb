@@ -31,10 +31,16 @@ class Maildir::WebQueue < Sinatra::Base
     halt 204, ""
   end
 
+  # Set the content type to JSON and returns the body as JSON
+  def json(body)
+    content_type "application/json"
+    body.to_json
+  end
+
   # Check the server status
   get "/status" do
-    content_type "application/json"
-    {"new" => queue.list(:new).size,"cur" => queue.list(:cur).size}.to_json
+    body = {"new" => queue.list(:new).size,"cur" => queue.list(:cur).size}
+    json(body)
   end
 
   # Create a new message. Requires params[:data]
@@ -42,18 +48,17 @@ class Maildir::WebQueue < Sinatra::Base
   post "/message" do
     halt 400, "Must specify data parameter" unless params[:data]
     message = queue.push(params[:data])
-    content_type "application/json"
-    message.key.to_json
+    json(message.key)
   end
 
   # Shift a new message off the queue
   get "/message" do
     message = queue.shift
-    content_type "application/json"
+
     if message
-      {"key" => message.key, "data" => message.data}.to_json
+      json({"key" => message.key, "data" => message.data})
     else
-      not_found "No new messages".to_json
+      not_found json("No new messages")
     end
   end
 
@@ -63,19 +68,18 @@ class Maildir::WebQueue < Sinatra::Base
     if queue.delete(key)
       no_content
     else
-      content_type "application/json"
-      not_found "Key #{key} does not exist".to_json
+      not_found json("Key #{key} does not exist")
     end
   end
 
-  # # Update the timestamps on a message
-  # post "/message/touch/*" do |key|
-  #   sanitize(key)
-  #   if queue.get(key).utime(Time.now, Time.now)
-  #     no_content
-  #   else
-  #     not_found "Key #{key} does not exist"
-  #   end
-  # end
+  # Update the timestamps on a message
+  post "/touch/*" do |key|
+    sanitize(key)
+    if queue.get(key).utime(Time.now, Time.now)
+      no_content
+    else
+      not_found json("Key #{key} does not exist")
+    end
+  end
 end
 
