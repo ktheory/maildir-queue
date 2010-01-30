@@ -7,7 +7,7 @@ class TestMaildirWebQueue < Test::Unit::TestCase
     Maildir::WebQueue
   end
 
-  context "The webcontroller" do
+  context "The WebQueue" do
 
     setup do
       FakeFS::FileSystem.clear
@@ -34,24 +34,24 @@ class TestMaildirWebQueue < Test::Unit::TestCase
       assert_equal @data, temp_queue.list(:new).first.data
     end
 
-    should "return 404 when no pending messages" do
+    should "return 404 when there are no new messages" do
       get "/message"
       assert_equal 404, last_response.status
     end
 
-    should "return successfully when messages are pending" do
+    should "return successfully when a new message exists" do
       post "/message", :data => @data
       get "/message"
       assert last_response.ok?
     end
 
-    should "return a well-formed key when messages are pending" do
+    should "return a well-formed key when new a message exists" do
       post "/message", :data => @data
       get "/message"
       assert_match Maildir::WebQueue::KEY_VALIDATORS[0], JSON.parse(last_response.body)["key"]
     end
 
-    should "return message data when messages are pending" do
+    should "return message data when a new message exits" do
       post "/message", :data => @data
       get "/message"
       assert_equal @data, JSON.parse(last_response.body)["data"]

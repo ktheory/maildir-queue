@@ -11,11 +11,11 @@ class Maildir::Queue < Maildir
 
   # Finds a new message and marks it as being processed (i.e. moves message
   # from new to cur). Returns message if successful; nil if there are no
-  # pending messages.
+  # new messages.
   def shift
     retries = 0
     begin
-      # Get a pending message
+      # Get a new message
       message = list(:new, :limit => 1).first
       return nil if message.nil?
 
@@ -26,12 +26,12 @@ class Maildir::Queue < Maildir
         raise Errno::ENOENT
       end
     rescue Errno::ENOENT
-      # Either message.process failed. Retry.
+      # message.process failed. Retry.
       if SHIFT_RETRIES < 0 || retries < SHIFT_RETRIES
         retries += 1
         retry
       else
-        # After several failures, act as if there are no pending messages
+        # After several failures, act as if there are no new messages
         return nil
       end
     end
