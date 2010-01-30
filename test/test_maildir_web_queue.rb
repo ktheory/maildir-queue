@@ -48,7 +48,7 @@ class TestMaildirWebQueue < Test::Unit::TestCase
     should "return a well-formed key when messages are pending" do
       post "/message", :data => @data
       get "/message"
-      assert_match Maildir::WebQueue::KEY_VALIDATOR, JSON.parse(last_response.body)["key"]
+      assert_match Maildir::WebQueue::KEY_VALIDATORS[0], JSON.parse(last_response.body)["key"]
     end
 
     should "return message data when messages are pending" do
@@ -60,10 +60,13 @@ class TestMaildirWebQueue < Test::Unit::TestCase
   end
 
   # Test the Maildir::WebQueue::KEY_VALIDATOR
-  bad_keys = [ "/etc/passwd", "cur/../../etc/password",
+  bad_keys = [
+    "/etc/passwd", "cur/../../etc/password", "..",
     "cur/123456789.M975543P58179Q11.host:2,",
     "cur/1234567890.M975543P58179Q11:2,",
-    "cur/1234567890.M975543P58179Q11.host"
+    "cur/1234567890.M975543P58179Q11.host",
+    "new/1234567890.M975543P58179Q11.host:2,",
+    "tmp/1234567890.M975543P58179Q11.host:2,FRS"
   ]
   bad_keys.each_with_index do |key, i|
     define_method "test_bad_key_#{i}" do
@@ -72,14 +75,16 @@ class TestMaildirWebQueue < Test::Unit::TestCase
     end
   end
 
-  good_keys = [ "cur/1234567890.M975543P58179Q11.host:2,",
+  good_keys = [
+    "cur/1234567890.M975543P58179Q11.host:2,",
     "cur/1234567890.abc123.really.long.domain.co.uk:2,",
-    "cur/1234567890.M975543P58179Q11.host:2,FRS"
+    "cur/1234567890.M975543P58179Q11.host:2,FRS",
+    "new/1234567890.M975543P58179Q11.host"
   ]
   good_keys.each_with_index do |key, i|
     define_method "test_good_key_#{i}" do
       delete "/message/#{key}"
-      assert last_response.successful?
+      assert_not_equal 403, last_response.status, "Key: #{key}"
     end
   end
 end

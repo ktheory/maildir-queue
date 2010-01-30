@@ -4,7 +4,10 @@ require "json"
 
 class Maildir::WebQueue < Sinatra::Base
 
-  KEY_VALIDATOR = /^(new|cur)\/\d{10}\.\w+(\.\w+)+:2,(\w+)?$/
+  KEY_VALIDATORS = [
+    /^cur\/\d{10}\.\w+(\.\w+)+:2,(\w+)?$/, # cur keys, with info
+    /^new\/\d{10}\.\w+(\.\w+)+$/ # new keys, no info
+  ]
 
   def self.path=(path)
     @@queue = Maildir::Queue.new(path)
@@ -17,7 +20,7 @@ class Maildir::WebQueue < Sinatra::Base
   # Test that key is well-formed. If not, return 403 Forbidden error.
   def sanitize(key)
     # E.g. cur/1263444769.M975543P58179Q11.gnt.local:2,
-    unless key.match(KEY_VALIDATOR)
+    unless KEY_VALIDATORS.any?{|validator| key.match(validator) }
       content_type "text/plain"
       halt 403, "Malformed key: #{key}"
     end
@@ -57,8 +60,12 @@ class Maildir::WebQueue < Sinatra::Base
   # Delete a message from the queue
   delete "/message/*" do |key|
     sanitize(key)
-    queue.delete(key)
-    no_content
+    if queue.delete(key)
+      no_content
+    else
+      content_type "application/json"
+      not_found "Key #{key} does not exist".to_json
+    end
   end
 
   # # Update the timestamps on a message
