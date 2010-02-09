@@ -1,6 +1,6 @@
 = maildir-queue
 
-Description goes here.
+A wrapper for the maildir library that gives it a queue-like interface.
 
 == Note on Patches/Pull Requests
  
