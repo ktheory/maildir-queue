@@ -1,8 +1,5 @@
 require 'maildir'
 class Maildir::Queue < Maildir
-  # How many times to retry getting a key.
-  # Default is -1 (infinite retries)
-  SHIFT_RETRIES = -1
 
   # Adds a new message to the queue. Returns a Maildir::Message object
   def push(data)
@@ -13,27 +10,9 @@ class Maildir::Queue < Maildir
   # from new to cur). Returns message if successful; nil if there are no
   # new messages.
   def shift
-    retries = 0
-    begin
-      # Get a new message
-      message = list(:new, :limit => 1).first
-      return nil if message.nil?
-
-      # Move the message from new to cur
-      if message.process
-        return message
-      else
-        raise Errno::ENOENT
-      end
-    rescue Errno::ENOENT
-      # message.process failed. Retry.
-      if SHIFT_RETRIES < 0 || retries < SHIFT_RETRIES
-        retries += 1
-        retry
-      else
-        # After several failures, act as if there are no new messages
-        return nil
-      end
+    loop do
+      message = do_shift
+      return message unless false == message
     end
   end
 
@@ -56,5 +35,16 @@ class Maildir::Queue < Maildir
         count
       end
     end
+  end
+
+  protected
+  # Called by shift. Returns the first message in the queue; nil if no
+  # messages are in the queue; or false if unable to process the message.
+  def do_shift
+    message = list(:new, :limit => 1).first
+    return nil if message.nil?
+
+    # Try to move the message from new to cur
+    message.process ? message : false
   end
 end
