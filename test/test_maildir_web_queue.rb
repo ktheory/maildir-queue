@@ -3,7 +3,7 @@ class TestMaildirWebQueue < Test::Unit::TestCase
   include Rack::Test::Methods
 
   def app
-    Maildir::WebQueue.path = temp_queue.path
+    Maildir::WebQueue.path = queue.path
     Maildir::WebQueue
   end
 
@@ -26,12 +26,12 @@ class TestMaildirWebQueue < Test::Unit::TestCase
 
     should "add posted messages to the queue" do
       post "/message", :data => @data
-      assert_equal 1, temp_queue.list(:new).size
+      assert_equal 1, queue.list(:new).size
     end
 
     should "save messages with the right data" do
       post "/message", :data => @data
-      assert_equal @data, temp_queue.list(:new).first.data
+      assert_equal @data, queue.list(:new).first.data
     end
 
     should "return 404 when there are no new messages" do
@@ -64,7 +64,7 @@ class TestMaildirWebQueue < Test::Unit::TestCase
     end
 
     should "touch a message" do
-      message = temp_queue.add(@data)
+      message = queue.add(@data)
       message.process
 
       post "/touch/#{message.key}"
@@ -72,7 +72,7 @@ class TestMaildirWebQueue < Test::Unit::TestCase
     end
 
     should "update a message's mtime when touched" do
-      message = temp_queue.add(@data)
+      message = queue.add(@data)
       message.process
 
       # Set mtime to 30 minutes ago

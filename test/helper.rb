@@ -14,6 +14,6 @@ require 'fakefs'
 
 
 # Create a reusable MaildirQueue that's cleaned up when the tests are done
-def temp_queue
+def queue
   Maildir::Queue.new("/tmp/maildir_queue_test")
 end
