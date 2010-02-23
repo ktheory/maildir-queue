@@ -5,6 +5,10 @@ class TestMaildirQueue < Test::Unit::TestCase
 
     setup { FakeFS::FileSystem.clear }
 
+    should "return nil if no messages to shift" do
+      assert_equal nil, queue.shift
+    end
+
     should "shift messages" do
       queue.add("1")
       queue.add("2")
