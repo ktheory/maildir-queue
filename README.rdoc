@@ -1,6 +1,8 @@
 = maildir-queue
 
-A wrapper for the maildir library that gives it a queue-like interface.
+A wrapper for the maildir library with a queue-like interface (push and shift).
+
+Also, a simple HTTP/JSON interface.
 
 == Install
 
@@ -52,7 +54,7 @@ Requeue them
 
   count = queue.requeue_stalled_messages(Time.now - 300)
 
-Clients can update a message's timestamps to indicate it's still be processed.
+Clients can update a message's timestamps to indicate it's still being processed.
 Then the retry interval can be shorter than the time it takes to process a message.
 
   message.utime(Time.now, Time.now)
