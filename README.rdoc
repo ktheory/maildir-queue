@@ -2,8 +2,99 @@
 
 A wrapper for the maildir library that gives it a queue-like interface.
 
+== Install
+
+  gem install maildir-queue
+
+== Usage
+
+Create a queue in /home/aaron/queue
+
+  require 'maildir/queue'
+  queue = Maildir::Queue.new("/home/aaron/queue")
+
+Push a new message onto the queue.
+
+  message = queue.push("Hello World!")
+
+List new messages
+
+  queue.list(:new) # => [message]
+
+List messages that are being processed
+
+  queue.list(:cur) # => []
+
+Move the first new message to 'cur' for processing
+
+  message = queue.shift # Returns nil if no new messages
+  message.data # => 'Hello World!'
+
+  queue.list(:new) # => []
+  queue.list(:cur) # => [message]
+
+Delete a message after it's processed
+
+  message.destroy
+
+  queue.list(:cur) # => []
+
+=== Dealing with stalled messages
+
+An exepected (but rare) behavior is for a client to fail while processing a message.
+Such messages will stay in 'cur' until retried.
+
+Get a list of messages in cur that have not been modified in 5 minutes
+
+  messages = queue.stalled_messages(Time.now - 300)
+
+Requeue them
+
+  count = queue.requeue_stalled_messages(Time.now - 300)
+
+Clients can update a message's timestamps to indicate it's still be processed.
+Then the retry interval can be shorter than the time it takes to process a message.
+
+  message.utime(Time.now, Time.now)
+
+== Maildir::WebQueue, the HTTP/JSON interface
+
+maildir-queue includes a simple Sinatra app providing an HTTP/JSON interface to a queue.
+
+Configure it like so:
+
+  require 'maildir/web_queue'
+  app = Maildir::WebQueue
+  app.path = '/home/aaron/queue'
+
+Push a message
+
+  POST /message?data=Hello World!
+
+Shift a message
+
+  GET /message
+
+  Response:
+  {"key": "cur/message_id", "data": "Hello world!"}
+  Or 404 Not Found if no new messages
+
+Delete a message
+
+  DELETE /message/key
+
+Update a message's timestamps
+
+  POST /touch/key
+
+Show count of messages in new and cur
+
+  GET /status
+  Response:
+  {"new": 2, "cur": 10}
+
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
