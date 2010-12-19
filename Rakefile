@@ -1,28 +1,4 @@
-require 'rubygems'
 require 'rake'
-
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "maildir-queue"
-    gem.summary = %Q{A simple queue API with a maildir backend.}
-    gem.description = %Q{A simple queue API with a maildir backend. Also includes an HTTP API}
-    gem.email = "aaron@ktheory.com"
-    gem.homepage = "http://github.com/ktheory/maildir-queue"
-    gem.authors = ["Aaron Suggs"]
-    gem.add_development_dependency "shoulda", ">= 0"
-    gem.add_development_dependency "rack-test", ">= 0"
-    gem.add_development_dependency "ktheory-fakefs", ">= 0"
-    gem.add_dependency "maildir", ">= 0.6.0"
-    gem.add_dependency "sinatra", ">= 0.0.0"
-    gem.add_dependency "json", ">= 0.0.0"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
-  end
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
-end
-
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
@@ -42,8 +18,6 @@ rescue LoadError
     abort "RCov is not available. In order to run rcov, you must: sudo gem install spicycode-rcov"
   end
 end
-
-task :test => :check_dependencies
 
 task :default => :test
 
