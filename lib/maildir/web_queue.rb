@@ -5,8 +5,8 @@ require "json"
 class Maildir::WebQueue < Sinatra::Base
 
   KEY_VALIDATORS = [
-    /^cur\/\d{10}\.\w+(\.\w+)+:2,(\w+)?$/, # cur keys, with info
-    /^new\/\d{10}\.\w+(\.\w+)+$/ # new keys, no info
+    /^cur\/\d{10}\.[\w-]+(\.[\w-]+)+:2,(\w+)?$/, # cur keys, with info
+    /^new\/\d{10}\.[\w-]+(\.[\w-]+)+$/ # new keys, no info
   ]
 
   def self.path=(path)

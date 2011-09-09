@@ -101,6 +101,7 @@ class TestMaildirWebQueue < Test::Unit::TestCase
 
   good_keys = [
     "cur/1234567890.M975543P58179Q11.host:2,",
+    "cur/1234567890.M975543P58179Q11.host-with-dash.localdomain:2,",
     "cur/1234567890.abc123.really.long.domain.co.uk:2,",
     "cur/1234567890.M975543P58179Q11.host:2,FRS",
     "new/1234567890.M975543P58179Q11.host"
