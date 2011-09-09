@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'maildir-queue'
-  s.version = '1.0.0'
+  s.version = '1.0.1'
 
   s.authors = ["Aaron Suggs"]
   s.description = 'A simple queue API with a maildir backend. Also includes an HTTP API'
