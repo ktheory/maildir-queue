@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rack-test'
   s.add_development_dependency 'ktheory-fakefs'
 
-  s.add_dependency 'maildir', "~> 1.0.0"
+  s.add_dependency 'maildir', ">= 1.0.0"
   s.add_dependency 'sinatra'
   s.add_dependency 'json'
 
