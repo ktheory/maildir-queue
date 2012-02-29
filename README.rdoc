@@ -4,6 +4,8 @@ A wrapper for the maildir library with a queue-like interface (push and shift).
 
 Also, a simple HTTP/JSON interface.
 
+{<img src="https://secure.travis-ci.org/ktheory/maildir-queue.png" />}[http://travis-ci.org/ktheory/maildir-queue]
+
 == Install
 
   gem install maildir-queue
