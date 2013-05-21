@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'shoulda'
   s.add_development_dependency 'rack-test'
-  s.add_development_dependency 'ktheory-fakefs'
+  s.add_development_dependency 'fakefs', ">= 0.3.2"
 
   s.add_dependency 'maildir', ">= 1.0.0"
   s.add_dependency 'sinatra'

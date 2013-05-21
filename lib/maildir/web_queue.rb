@@ -63,7 +63,7 @@ class Maildir::WebQueue < Sinatra::Base
   end
 
   # Delete a message from the queue
-  delete "/message/*" do |key|
+  delete %r{/message/*} do |key|
     sanitize(key)
     if queue.delete(key)
       no_content
@@ -73,7 +73,7 @@ class Maildir::WebQueue < Sinatra::Base
   end
 
   # Update the timestamps on a message
-  post "/touch/*" do |key|
+  post %r{/touch/*} do |key|
     sanitize(key)
     if queue.get(key).utime(Time.now, Time.now)
       no_content

@@ -7,9 +7,6 @@ $LOAD_PATH.unshift(File.dirname(__FILE__))
 require 'maildir/queue'
 require 'maildir/web_queue'
 
-# Require 'ktheory-fakefs' until issues 28, 29, and 30 are resolved in
-# defunkt/fakefs. See http://github.com/defunkt/fakefs/issues
-gem "ktheory-fakefs"
 require 'fakefs'
 
 
